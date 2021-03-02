@@ -43,9 +43,8 @@ new ValidatedMethod({
                 }
                 // Actualizamos los permisos para el nuevo rol a todos los usuarios en la tabla de relacion
                 // role-assignment
-                //ProfileServ.updateProfileUsers(users,profile,oldProfile);
-                ProfileServ.updateProfileUsers(users,profile);
-                responseMessage.create('Se ha actualizo el perfil');
+                ProfileServ.updateProfileUsers(users,oldProfile);
+                responseMessage.create('Se ha actualizado el perfil');
             }catch (exception) {
                 console.error('profile.save', exception);
                 throw new Meteor.Error('500', 'Ocurrió un error al actualizar el perfil');
