@@ -18,6 +18,7 @@ new ValidatedMethod({
             console.error('profile.save', exception);
             throw new Meteor.Error('403', 'La informacion introducida no es válida.');
         }
+        ProfileServ.validateProfileName(profile.name,profile._id);
     },
     run(profile) {
         console.log('profile.save');
@@ -43,7 +44,7 @@ new ValidatedMethod({
                 }
                 // Actualizamos los permisos para el nuevo rol a todos los usuarios en la tabla de relacion
                 // role-assignment
-                ProfileServ.updateProfileUsers(users,oldProfile);
+                ProfileServ.updateProfileUsers(users,profile);
                 responseMessage.create('Se ha actualizado el perfil');
             }catch (exception) {
                 console.error('profile.save', exception);
@@ -62,6 +63,31 @@ new ValidatedMethod({
                 console.error('profile.save', exception);
                 throw new Meteor.Error('500', 'Ocurrió un error al guardar el perfil');
             }
+        }
+
+
+        return responseMessage;
+    }
+});
+
+new ValidatedMethod({
+    name: 'profile.delete',
+    validate({ idProfile }){
+        try {
+            check(idProfile, String);
+        }catch (exception) {
+            console.error('profile.delete', exception);
+            throw new Meteor.Error('403', 'Ocurrio un error al eliminar el perfil');
+        }
+    },
+    run({ idProfile }){
+        const responseMessage = new ResponseMessage();
+        try {
+                Profile.remove(idProfile);
+                responseMessage.create('Perfil eliminado exitosamente');
+        }catch (exception) {
+            console.error('profile.delete', exception);
+            throw new Meteor.Error('500', 'Ocurrio un error al eliminar el perfil');
         }
 
 

@@ -1,5 +1,9 @@
 import Permissions, {permissionsArray} from '../../startup/server/Permissions';
 import {Profile} from "./Profile";
+
+Profile.rawCollection().createIndex({'name':1},{unique: true});
+
+
 export const StaticProfiles={
     admin: {
         name: 'admin',

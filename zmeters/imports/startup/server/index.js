@@ -1,5 +1,6 @@
 import './Permissions';
 import '../../api/Users/UsersCtrl';
+import '../../api/Users/User';
 import '../../api/Users/UsersPubs';
 import '../../api/Profiles/ProfileSeeder';
 import '../../api/Profiles/ProfileCtl';
