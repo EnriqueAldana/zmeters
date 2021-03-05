@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import AlertMessage from "../../components/Utilities/Alerts/AlertMessage";
-import Loader from "../../components/Utilities/Loaders/Loader";
+import {mapMutations} from 'vuex';
+
     export default {
         name: "Login",
         data() {
@@ -33,13 +33,16 @@ import Loader from "../../components/Utilities/Loaders/Loader";
             }
         },
         methods: {
+          ...mapMutations('auth',['setUser']),
             login() {
-                console.log("usuario: ", this.user);
-                this.$loader.activate("Entrando al sistema...");
-                setTimeout( ()=>{
-                  this.$loader.deactivate();;
-                  this.$alert.showAlertSimple("error", "Credenciales incorrectas");
-              }, 2000)
+                Meteor.loginWithPassword(this.user.userOrEmail,this.user.password,error=>{
+                  if(error) {
+                    this.$alert.showAlertSimple('error','Credenciales incorrectas');
+                  }else{
+                    this.setUser(Meteor.user());  // Aqui marca un error
+                    this.$router.push({name:'home'});
+                  }
+                });
 
             }
         }

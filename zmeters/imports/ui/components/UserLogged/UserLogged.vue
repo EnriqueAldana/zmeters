@@ -8,14 +8,20 @@
     </template>
     <v-list>
       <v-list-item href="#" :to="{name:'home.account'}">Cuenta</v-list-item>
-      <v-list-item href="#">Cerrar sesión</v-list-item>
+      <v-list-item href="#" @click="closeSession">Cerrar sesión</v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script>
 export default {
-  name: "UserLogged"
+  name: "UserLogged",
+  methods: {
+    closeSession(){
+      Meteor.logout();
+      this.$router.push({name: 'login'})
+    }
+  }
 }
 </script>
 
