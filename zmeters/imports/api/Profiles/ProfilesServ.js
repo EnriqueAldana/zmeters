@@ -1,5 +1,7 @@
 import {Profile} from './Profile';
 import {Meteor} from 'meteor/meteor'
+import {StaticProfiles} from "./ProfileSeeder";
+
 export default {
 
     getUsersByprofile(idPrtofile){
@@ -27,6 +29,12 @@ export default {
         }else if(existsProfileName){ // El nombre de NUEVO profile ya existe
             throw new Meteor.Error('403', 'El nombre del Perfil  ya esta siendo utilizado');
         }
+    },
+    getStaticprofilesName(){
+
+        return Object.keys(StaticProfiles).map(staticprofileName => {
+            return StaticProfiles[staticprofileName].name;
+        });
     }
 
 

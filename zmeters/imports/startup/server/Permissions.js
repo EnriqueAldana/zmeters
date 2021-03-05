@@ -6,9 +6,25 @@ const Permissions={
         LIST:{VALUE:'users-view',TEXT:'Listar usuarios'},
         CREATE:{VALUE:'users-create',TEXT:'Crear Usuario'},
         UPDATE:{VALUE:'users-edit',TEXT:'Editar Usuario'},
-        DELETE:{VALUE:'users-delete',TEXT:'Borrar Usuario'},
-        ADMIN:{VALUE:'users-admin',TEXT:'Administrar  Usuarios'},
-        SUPERADMIN:{VALUE:'users-super-admin',TEXT:'Super usuario'}
+        DELETE:{VALUE:'users-delete',TEXT:'Borrar Usuario'}
+    },
+    PROFILES:{
+        LIST:{VALUE:'profiles-view',TEXT:'Listar perfil'},
+        CREATE:{VALUE:'profiles-create',TEXT:'Crear perfil'},
+        UPDATE:{VALUE:'profiles-edit',TEXT:'Editar perfil'},
+        DELETE:{VALUE:'profiles-delete',TEXT:'Borrar perfil'}
+    },
+    ADMINS:{
+        LIST_ADMINS:{VALUE:'admins-view',TEXT:'Listar administrador'},
+        CREATE_ADMIN:{VALUE:'admins-create',TEXT:'Crear administrador'},
+        UPDATE_ADMIN:{VALUE:'admins-edit',TEXT:'Editar administrador'},
+        DELETE_ADMIN:{VALUE:'admins-delete',TEXT:'Borrar administrador'}
+    },
+    SUPERADMINS:{
+        LIST_SUPER_ADMINS:{VALUE:'superadmins-view',TEXT:'Listar super administrador'},
+        CREATE_SUPER_ADMIN:{VALUE:'superadmins-create',TEXT:'Crear super administrador'},
+        UPDATE_SUPER_ADMIN:{VALUE:'superadmins-edit',TEXT:'Editar super administrador'},
+        DELETE_SUPER_ADMIN:{VALUE:'superadmins-delete',TEXT:'Borrar super administrador'}
 
     }
 };

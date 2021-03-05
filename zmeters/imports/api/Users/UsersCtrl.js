@@ -2,9 +2,36 @@ import {ValidatedMethod} from 'meteor/mdg:validated-method';
 import {check} from 'meteor/check';
 import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
 import UsersServ from "./UsersServ";
+import AuthGuard from "../../middlewares/AuthGuard";
+import Permissions from "../../startup/server/Permissions";
+
+// Aqui removemos los rgistros de tokens del objeto user en la BD
+
+Accounts.validateLoginAttempt( loginAttempt=>{
+   // console.log('loginAttempt ' , loginAttempt);
+    // console.log('allowed' , loginAttempt.allowed);
+    if(loginAttempt.allowed){
+        const loginTokensOfuser=loginAttempt.user.services.resume?.loginTokens || [];
+        //console.log('loginTokensOfuser ', loginTokensOfuser)
+        if(loginTokensOfuser.length > 1){
+            Meteor.users.update(loginAttempt.user._id,{
+                $set:{
+                    'services.resume.loginTokens': [loginTokensOfuser.pop()]
+                }
+            });
+        }
+        return true;
+    }
+
+});
+
 
 new ValidatedMethod({
     name: 'user.save',
+    mixins: [MethodHooks],
+    permissions: [Permissions.USERS.CREATE.VALUE,Permissions.USERS.UPDATE.VALUE],
+    beforeHooks: [AuthGuard.checkPermission],  // Aqui se verifica si los permisos de usuario son adecuados para esta accion
+    afterHooks: [],
     validate(user) {
         try {
             // Valida que la estructura del objeto user este conforme a la definicion.
@@ -17,6 +44,8 @@ new ValidatedMethod({
                     name: String,
                     path: Match.OneOf(String, null)
                 }
+                //,
+                //password:String
             });
         } catch (exception) {
             console.error('user.save', exception);
@@ -26,10 +55,10 @@ new ValidatedMethod({
         UsersServ.validateEmail(user.emails[0].address,user._id);
         UsersServ.validateUserName(user.username,user._id);
 
-
     },
     run(user) {
         console.log('user.save');
+        console.log('Usuario logeado ', this.userId);
         const responseMessage= new ResponseMessage();
         if(user._id !==null){
             console.log('Actualizando usuario a la BD');
@@ -61,6 +90,9 @@ new ValidatedMethod({
 
 new ValidatedMethod({
     name:'user.delete',
+    mixins: [MethodHooks],
+    permissions: [Permissions.USERS.DELETE.VALUE],
+    beforeHooks: [AuthGuard.checkPermission],
     validate({idUser}){
         try{
             check('idUser',String);
@@ -76,6 +108,8 @@ new ValidatedMethod({
         try{
             console.log('Eliminando usuario a la BD');
             Meteor.users.remove(idUser);
+            // Debemos remover las asignaciones de perfiles
+            Meteor.roleAssignments.remove({'user._id':idUser});
             responseMessage.create('Usuario eliminado exitosamente');
         }catch(exception){
             console.error('user.remove','Ocurrió un error al eliminar al usaurio');

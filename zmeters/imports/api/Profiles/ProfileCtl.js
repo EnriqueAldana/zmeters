@@ -2,9 +2,15 @@ import {check, Match} from "meteor/check";
 import {Profile} from "./Profile";
 import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
 import ProfileServ from "./ProfilesServ";
+import Permissions from "../../startup/server/Permissions";
+import AuthGuard from "../../middlewares/AuthGuard";
 
 new ValidatedMethod({
     name: 'profile.save',
+    mixins: [MethodHooks],
+    permissions: [Permissions.PROFILES.CREATE.VALUE,Permissions.PROFILES.UPDATE.VALUE],
+    beforeHooks: [AuthGuard.checkPermission],  // Aqui se verifica si los permisos de usuario son adecuados para esta accion
+    afterHooks: [],
     validate(profile) {
         try {
             // Valida que la estructura del objeto user este conforme a la definicion.
@@ -45,6 +51,7 @@ new ValidatedMethod({
                 // Actualizamos los permisos para el nuevo rol a todos los usuarios en la tabla de relacion
                 // role-assignment
                 ProfileServ.updateProfileUsers(users,profile);
+                console.log('Se ha actualizado el perfil');
                 responseMessage.create('Se ha actualizado el perfil');
             }catch (exception) {
                 console.error('profile.save', exception);
@@ -72,6 +79,10 @@ new ValidatedMethod({
 
 new ValidatedMethod({
     name: 'profile.delete',
+    mixins: [MethodHooks],
+    permissions: [Permissions.PROFILES.DELETE.VALUE],
+    beforeHooks: [AuthGuard.checkPermission],  // Aqui se verifica si los permisos de usuario son adecuados para esta accion
+    afterHooks: [],
     validate({ idProfile }){
         try {
             check(idProfile, String);

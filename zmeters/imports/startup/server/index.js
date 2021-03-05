@@ -5,6 +5,9 @@ import '../../api/Users/UsersPubs';
 import '../../api/Profiles/ProfileSeeder';
 import '../../api/Profiles/ProfileCtl';
 import '../../api/Profiles/ProfilesServ';
+import '../../api/Profiles/ProfilesPubs';
+
+//import '../../AuthGuard';
 
 
 // Ejemplos de creacion de metodos o End Points

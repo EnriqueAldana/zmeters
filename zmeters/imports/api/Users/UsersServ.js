@@ -1,3 +1,5 @@
+import ProfilesServ from "../Profiles/ProfilesServ";
+
 export default {
 
     validateEmail(newEmail,idUser){
@@ -26,11 +28,16 @@ export default {
             throw new Meteor.Error('403', 'El nombre de usuario  ya esta siendo utilizado');
         }
     },createUser(user){
-        Accounts.createUser({
+        const idUser= Accounts.createUser({
             username: user.username,
             email: user.emails[0].address,
             profile: user.profile
+            //,  AL CREAR USUARIO no se fija el password porque se implementara un envio de una URL para que el usuario lo fije
+            //password: user.password
         });
+        if(idUser){
+            ProfilesServ.setUsersRoles(idUser,user.profile.profile);
+        }
     },updateuser(user){
         const currentUser=Meteor.users.findOne(user._id);
 
@@ -50,6 +57,7 @@ export default {
                     path: user.profile.path
                 }
             });
+            ProfilesServ.setUsersRoles(user._id,user.profile.profile);
         }else{
             throw new Meteor.Error('403', 'El usuario por actualizar no está en la BD');
         }
