@@ -12,7 +12,7 @@
             <span>Agregar usuario</span>
           </v-tooltip>
         </div>
-        <v-data-table :headers="headers" :items="users" sort-by="name" class="elevation-1">
+        <v-data-table :headers="headers" :items="users" @dblclick:row="(event,{item})=>openEditUser(item)" sort-by="name" class="elevation-1">
           <template v-slot:item.action="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{on}">
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex';
 import ModalRemove from "../../components/Utilities/Modals/ModalRemove";
 
 export default {
@@ -108,8 +109,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('temporal',['setElement']),
     openEditUser(user) {
-      //TODO: Guardar en Vuex
+      //Guardar en Vuex para recuprar en la vistad de user.save
+      this.setElement(user);
       console.log("user: ", user);
       this.$router.push({name: 'home.users.edit'});
     },

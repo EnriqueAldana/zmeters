@@ -52,9 +52,11 @@ export default {
 
             Meteor.users.update(user._id,{
                 $set:{
-                    profile: user.profile.profile,
-                    name: user.profile.name,
-                    path: user.profile.path
+                    profile:{
+                        profile: user.profile.profile,
+                        name: user.profile.name,
+                        path: currentUser.profile.path
+                    }
                 }
             });
             ProfilesServ.setUsersRoles(user._id,user.profile.profile);
