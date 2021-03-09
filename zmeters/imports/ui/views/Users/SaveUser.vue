@@ -16,12 +16,12 @@
             <v-form @submit.prevent="saveUser" id="saveUser" autocomplete="off">
               <v-row>
                 <v-col xs="12" sm="12" md="4">
-                  <img src="./img/vuetify.png" alt="Subir imagen" width="150px">
+                  <img src="/img/vuetify.png" alt="Subir imagen" width="150px">
                 </v-col>
                 <v-col xs="12" sm="12" md="8">
-                  <v-text-field v-model="user.name" id="inputName" name="name" label="Nombre">
+                  <v-text-field v-model="user.profile.name" id="inputName" name="name" label="Nombre">
                   </v-text-field>
-                  <v-select v-model="user.profile" id="selectProfile" name="profile"
+                  <v-select v-model="user.profile.profile" id="selectProfile" name="profile"
                             :items="profiles"
                             item-text="description" item-value="name"
                             label="Perfil">
@@ -29,7 +29,7 @@
                   <v-text-field v-model="user.username" id="inputUsername" name="username"
                                 label="Usuario">
                   </v-text-field>
-                  <v-text-field v-model="user.email" id="inputEmail" type="email"
+                  <v-text-field v-model="user.emails[0].address" id="inputEmail" type="email"
                                 name="email" label="Correo">
                   </v-text-field>
                 </v-col>
@@ -43,21 +43,22 @@
 </template>
 
 <script>
+import {Profile} from "../../../api/Profiles/Profile";
+
 export default {
   name: "SaveUser",
   data() {
     return {
       user: {
         _id: null,
-        name: null,
         username: null,
-        email: null,
-        profile: null,
+        emails: [{address:null, verified:false}],
+        profile: {
+          profile: null,
+          name:null,
+          path: null
+        },
       },
-      profiles: [
-        {name: 'admin', description: 'Administrador'},
-        {name: 'chat', description: 'Usuario Chat'}
-      ],
       dataView: {
         title: '',
         targetButton: ''
@@ -76,6 +77,23 @@ export default {
   methods: {
     saveUser() {
       console.log("Usuario: ", this.user);
+      this.$loader.activate('Guardando usuario...');
+      Meteor.call('user.save',this.user,(error,response) => {
+        this.$loader.deactivate();
+        if(error){
+              this.$alert.showAlertSimple('error',error.reason);
+        }else{
+          this.$alert.showAlertSimple('success',response.message);
+        }
+      });
+    }
+  },
+  meteor:{
+    $subscribe: {
+        'profile.listAll': []
+    },
+    profiles(){
+      return Profile.find().fetch();
     }
   }
 }

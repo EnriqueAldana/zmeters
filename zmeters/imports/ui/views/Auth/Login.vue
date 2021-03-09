@@ -39,7 +39,12 @@ import {mapMutations} from 'vuex';
                   if(error) {
                     this.$alert.showAlertSimple('error','Credenciales incorrectas');
                   }else{
-                    this.setUser(Meteor.user());  // Aqui marca un error
+                    Meteor.logoutOtherClients(err=>{
+                      if(err) {
+                        console.error('Error al cerrar sesion en otros dispositivos')
+                      }
+                    });
+                    this.setUser(Meteor.user());
                     this.$router.push({name:'home'});
                   }
                 });

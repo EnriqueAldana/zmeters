@@ -4,8 +4,10 @@ import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
 import UsersServ from "./UsersServ";
 import AuthGuard from "../../middlewares/AuthGuard";
 import Permissions from "../../startup/server/Permissions";
+import {Meteor} from 'meteor/meteor'
 
 // Aqui removemos los rgistros de tokens del objeto user en la BD
+
 
 Accounts.validateLoginAttempt( loginAttempt=>{
    // console.log('loginAttempt ' , loginAttempt);
@@ -104,17 +106,20 @@ new ValidatedMethod({
     },
     run({idUser}){
         console.log('user.remove');
+        console.log('idUser', idUser);
         const responseMessage = new ResponseMessage;
+
         try{
-            console.log('Eliminando usuario a la BD');
-            Meteor.users.remove(idUser);
-            // Debemos remover las asignaciones de perfiles
-            Meteor.roleAssignments.remove({'user._id':idUser});
-            responseMessage.create('Usuario eliminado exitosamente');
+                console.log('Eliminando usuario a la BD');
+                Meteor.users.remove(idUser);
+                //Meteor.roleAssignment.remove({'user._id':idUser._id});
+
         }catch(exception){
             console.error('user.remove','Ocurrió un error al eliminar al usaurio');
             throw new Meteor.Error('500', 'ocurrió un error al eliminar al usaurio');
         }
+
+        responseMessage.create('Usuario eliminado exitosamente');
         return responseMessage;
     }
 });

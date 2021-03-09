@@ -70,11 +70,6 @@ export default {
         username: '',
         email: ''
       },
-      users: [
-        {_id: 1, name: 'Peter Parker', username: 'Spider-Man', email: 'spidy@correo.com'},
-        {_id: 2, name: 'Tony Stark', username: 'Iron Man', email: 'iron@correo.com'},
-        {_id: 3, name: 'Steve Rogers', username: 'Captain America', email: 'captain@correo.com'}
-      ],
       userTemp: {
         preposition: 'al',
         typeElement: 'usuario',
@@ -88,7 +83,7 @@ export default {
     headers() {
       return [
         {
-          value: 'name', text: 'Nombre', sortable: true, filter: value => {
+          value: 'profile.name', text: 'Nombre', sortable: true, filter: value => {
             return value != null && typeof value === 'string' &&
                 value.toString().toLocaleLowerCase()
                     .indexOf(this.headersFilter.name.toLocaleLowerCase()) !== -1;
@@ -102,7 +97,7 @@ export default {
           }
         },
         {
-          value: 'email', text: 'Correo', sortable: true, filter: value => {
+          value: 'emails[0].address', text: 'Correo', sortable: true, filter: value => {
             return value != null && typeof value === 'string' &&
                 value.toString().toLocaleLowerCase()
                     .indexOf(this.headersFilter.email.toLocaleLowerCase()) !== -1;
@@ -122,11 +117,28 @@ export default {
       console.log("user: ", user);
       this.userTemp.element = user;
       this.userTemp._id = user._id;
-      this.userTemp.mainNameElement = user.name;
+      this.userTemp.mainNameElement = user.profile.name;
       this.$refs.refModalRemove.dialog = true;
     },
     deleteUser(idUser) {
-      console.log("Usuario a eliminar: ", idUser);
+      this.$loader.activate("Eliminando usuario....");
+      Meteor.call('user.delete',{idUser},(error,response)=>{
+        this.$loader.deactivate();
+        if(error){
+          this.$alert.showAlertSimple('error',error.reason);
+        }else{
+
+          this.$alert.showAlertSimple('success',response.message);
+        }
+      });
+    }
+  },
+  meteor:{
+    $subscribe: {
+      'user.list':[]
+    },
+    users(){
+      return Meteor.users.find({_id:{$ne:Meteor.userId()}}).fetch();
     }
   }
 }

@@ -15,7 +15,11 @@ export default [
         path:'/',
         components:{
             allPageView: LytSPA
-        },children:[
+        },
+        meta:{
+          requirestAuth: true
+        },
+        children:[
 
             {
                 name: 'home',

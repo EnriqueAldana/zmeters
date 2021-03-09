@@ -3,7 +3,7 @@ import * as mutations from './mutations';
 
 export default {
 
-    namespace: true,
+    namespaced: true,
     mutations,
     state
 }

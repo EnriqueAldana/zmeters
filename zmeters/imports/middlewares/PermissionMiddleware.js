@@ -55,7 +55,7 @@ export class PermissionMiddleware extends PublishMiddleware {
 
 
         checkPermission(idUser){
-            const profileName= Roles.getScopeForUser(idUser)[0];
+            const profileName= Roles.getScopeForUser(idUser) [0];
             return Roles.userIsRoles(idUser, this._permissions, profileName);
         }
 
