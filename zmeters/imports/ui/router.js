@@ -19,7 +19,21 @@ router.beforeEach((to,from,next)=>{
     }else if(requirestAuth && !isLogged){
         next('/login');
     }else{
-        next();
+        const permission= to.meta.permission;
+        if(permission){
+            Meteor.call('permissions.check',permission,(error,response)=>{
+                if(error){
+                    this.$alert.showAlertSimple('error',error.reason);
+                }else if(response.data.hasPermission){
+                    next();
+                }else{
+                    next(from.path);
+                    console.warn('El usuario no tiene acceso a esta seccion')
+                }
+            });
+        }else{
+            next();
+        }
     }
 });
 

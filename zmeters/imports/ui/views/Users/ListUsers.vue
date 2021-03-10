@@ -5,7 +5,7 @@
         <div class="d-flex flex-row-reverse mb-5">
           <v-tooltip bottom>
             <template v-slot:activator="{on}">
-              <v-btn color="success" v-on="on" fab dark :to="{name:'home.users.create'}">
+              <v-btn v-can:create.hide="'users'" color="success" v-on="on" fab dark :to="{name:'home.users.create'}">
                 <v-icon>add</v-icon>
               </v-btn>
             </template>
@@ -16,7 +16,7 @@
           <template v-slot:item.action="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{on}">
-                <v-icon color="info" v-on="on" small class="mr-2" @click="openEditUser(item)">
+                <v-icon v-can:edit.hide="'users'" color="info" v-on="on" small class="mr-2" @click="openEditUser(item)">
                   edit
                 </v-icon>
               </template>
@@ -24,7 +24,7 @@
             </v-tooltip>
             <v-tooltip bottom>
               <template v-slot:activator="{on}">
-                <v-icon color="error" v-on="on" small class="mr-2" @click="openRemoveModal(item)">
+                <v-icon v-can:delete.hide="'users'" color="error" v-on="on" small class="mr-2" @click="openRemoveModal(item)">
                   delete
                 </v-icon>
               </template>

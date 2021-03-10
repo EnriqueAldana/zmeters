@@ -12,16 +12,19 @@ export default {
         {
             name: 'home.profiles',
             path: '',
+            meta:{permission: 'profiles-view'},
             component: ListProfiles
         },
         {
             name: 'home.profiles.create',
             path: 'crear',
+            meta:{permission: 'profiles-create'},
             component: SaveProfile
         },
         {
             name: 'home.profiles.edit',
             path: 'editar',
+            meta:{permission: 'profiles-edit'},
             component: SaveProfile
         }
     ]

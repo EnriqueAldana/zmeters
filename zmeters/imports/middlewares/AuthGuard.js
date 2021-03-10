@@ -12,4 +12,11 @@ const checkPermission=function(methodArgs,methodOptions){
         return methodArgs;
 };
 
-export default {checkPermission};
+const isUserLogged=function(methodArgs,methodOptions){
+  if(!this.userId){
+      throw new Meteor.Error('403','Acceso denegado.', 'No tienes permiso para ejecutar esta opcion');
+  }
+  return methodArgs;
+};
+
+export default {checkPermission,isUserLogged};

@@ -24,27 +24,19 @@
         data() {
             return {
                 optionSelected: 0,
-                options: [
-                    {
-                        icon: 'home',
-                        title: 'Inicio',
-                        nameRoute: 'home'
-                    },
-                    {
-                        icon: 'person',
-                        title: 'Usuarios',
-                        nameRoute: 'home.users'
-                    },
-                    {
-                        icon: 'user-tag',
-                        title: 'Perfiles',
-                        nameRoute: 'home.profiles'
-                    }
-                ]
+                options: []
             }
         },
         created() {
-            this.updateSelectedOption();
+          Meteor.call('user.getSystemOptions',null,(error,response)=>{
+            if(error){
+              this.$alert.showAlertSimple('error',error.reason);
+            }else{
+              this.options= response.data;
+              this.updateSelectedOption();
+            }
+          });
+
         },
         watch:{
             '$route'(){
@@ -53,10 +45,10 @@
         },
         methods: {
             goToView(option) {
-                this.$router.push({name: option.nameRoute})
+                this.$router.push({name: option.routeName})
             },
             updateSelectedOption(){
-                const optionSelected = this.options.find(option => option.nameRoute === this.$route.name);
+                const optionSelected = this.options.find(option => option.routeName === this.$route.name);
                 this.optionSelected = optionSelected ? this.options.indexOf(optionSelected) : this.optionSelected;
             }
         }
