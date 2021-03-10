@@ -6,6 +6,7 @@ import '../../api/Profiles/ProfileSeeder';
 import '../../api/Profiles/ProfileCtl';
 import '../../api/Profiles/ProfilesServ';
 import '../../api/Profiles/ProfilesPubs';
+import '../../api/Permissions/PermissionCtl'
 
 //import '../../AuthGuard';
 

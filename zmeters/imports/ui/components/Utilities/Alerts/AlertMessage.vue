@@ -71,6 +71,19 @@ name: "AlertMessage",
       this.mode='';
       this.timeout=5000;
       this.snackbar=true;
+    },
+    showAlertFull(icon,color,title,mode,timeout,x,y,text=null){
+
+      this.icon= icon;
+      this.color= color;
+      this.text = text;
+      this.mode= mode;
+      this.timeout= timeout;
+      this.x = x;
+      this.y = y;
+      this.snackbar= true;
+      this.title = title;
+
     }
   }
 }

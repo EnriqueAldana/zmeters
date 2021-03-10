@@ -5,6 +5,7 @@ import ProfileServ from "./ProfilesServ";
 import Permissions from "../../startup/server/Permissions";
 import AuthGuard from "../../middlewares/AuthGuard";
 
+
 new ValidatedMethod({
     name: 'profile.save',
     mixins: [MethodHooks],
@@ -58,6 +59,7 @@ new ValidatedMethod({
                 throw new Meteor.Error('500', 'Ocurrió un error al actualizar el perfil');
             }
         }else{
+            console.log('perfil: ',profile);
             try{
                 Profile.insert({
                     name: profile.name,
@@ -89,6 +91,14 @@ new ValidatedMethod({
         }catch (exception) {
             console.error('profile.delete', exception);
             throw new Meteor.Error('403', 'Ocurrio un error al eliminar el perfil');
+        }
+        // validar que no sea posible eliminar un perfil si hay un usuario utilizandolo.
+        const userWithProfile = ProfileServ.getUsersByprofile(idProfile);
+        console.log('idProfile', idProfile);
+        console.log('userWithProfile', userWithProfile)
+        if (userWithProfile.length > 0){
+            throw new Meteor.Error('403','No es posible elimiar el perfil',
+                'Hay al menos un usuario utilizando el perfil');
         }
     },
     run({ idProfile }){

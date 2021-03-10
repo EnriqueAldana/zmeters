@@ -65,7 +65,7 @@ export default {
       }
     }
   },
-  created(){
+  created(){  // Este es un metodo gancho, y se ejecuta cuando el HTML es creado
     if(this.$router.currentRoute.name.includes("create")){
       this.dataView.title="Crear usuario";
       this.dataView.targetButton="Crear";
@@ -91,8 +91,10 @@ export default {
               this.$alert.showAlertSimple('error',error.reason);
         }else{
           this.$alert.showAlertSimple('success',response.message);
+          this.$router.push({name: 'home.users'});
         }
       });
+
     }
   },
   meteor:{

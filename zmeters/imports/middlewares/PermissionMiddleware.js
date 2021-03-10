@@ -24,7 +24,7 @@ export class PermissionMiddleware extends PublishMiddleware {
 
         removed(publish,collection,id){
             if (this.checkPermission(publish.userId)){
-                return super.remove(...arguments);
+                return super.removed(...arguments);
             }
             return publish.ready();
 
@@ -55,8 +55,8 @@ export class PermissionMiddleware extends PublishMiddleware {
 
 
         checkPermission(idUser){
-            const profileName=Roles.getScopeForUser(idUser)[0];
-            return Roles.userIsRoles(idUser, this._permissions, profileName);
+            const profileName=Roles.getScopesForUser(idUser)[0];
+            return Roles.userIsInRole(idUser, this._permissions, profileName);
         }
 
 }

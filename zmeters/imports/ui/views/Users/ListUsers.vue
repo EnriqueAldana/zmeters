@@ -113,7 +113,6 @@ export default {
     openEditUser(user) {
       //Guardar en Vuex para recuprar en la vistad de user.save
       this.setElement(user);
-      console.log("user: ", user);
       this.$router.push({name: 'home.users.edit'});
     },
     openRemoveModal(user) {
@@ -130,7 +129,6 @@ export default {
         if(error){
           this.$alert.showAlertSimple('error',error.reason);
         }else{
-
           this.$alert.showAlertSimple('success',response.message);
         }
       });

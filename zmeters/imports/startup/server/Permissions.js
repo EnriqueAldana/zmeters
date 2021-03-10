@@ -14,6 +14,9 @@ const Permissions={
         UPDATE:{VALUE:'profiles-edit',TEXT:'Editar perfil'},
         DELETE:{VALUE:'profiles-delete',TEXT:'Borrar perfil'}
     },
+    PERMISSIONS:{
+        LIST:{VALUE:'permissions-view',TEXT:'Listar permisos'}
+    },
     ADMINS:{
         LIST_ADMINS:{VALUE:'admins-view',TEXT:'Listar administrador'},
         CREATE_ADMIN:{VALUE:'admins-create',TEXT:'Crear administrador'},

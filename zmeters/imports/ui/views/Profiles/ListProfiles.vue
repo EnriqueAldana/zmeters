@@ -12,7 +12,7 @@
             <span>Agregar perfil</span>
           </v-tooltip>
         </div>
-        <v-data-table :headers="headers" :items="profiles" sort-by="name" class="elevation-1">
+        <v-data-table :headers="headers" :items="profiles" @dblclick:row="(event,{item})=>openEditProfile(item)"sort-by="name" class="elevation-1">
           <template v-slot:item.action="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{on}">
@@ -41,6 +41,8 @@
 
 <script>
 import ModalRemove from "../../components/Utilities/Modals/ModalRemove";
+import {Profile} from "../../../api/Profiles/Profile";
+import {mapMutations} from "vuex";
 export default {
   name: "ListProfiles",
   components: {
@@ -52,10 +54,6 @@ export default {
         {value: 'description', text: 'Nombre del perfil', sortable: true},
         {value: 'action', text: 'Opciones', sortable: false},
       ],
-      profiles: [
-        {_id: 1, name: 'admin', description: 'Administrador'},
-        {_id: 2, name: 'chat', description: 'Usuario chat'}
-      ],
       profileTemp: {
         preposition: 'el',
         typeElement: 'perfil',
@@ -66,13 +64,13 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('temporal',['setElement']),
     openEditProfile(profile){
-      //TODO: Guardar en Vuex
-      console.log("profile: ", profile);
+      //Guardar en Vuex
+      this.setElement(profile);
       this.$router.push({name: 'home.profiles.edit'});
     },
     openRemoveModal(profile) {
-      console.log("profile: ", profile);
       this.profileTemp.element = profile;
       this.profileTemp._id = profile._id;
       this.profileTemp.mainNameElement = profile.description;
@@ -80,7 +78,29 @@ export default {
       this.$refs.refModalRemove.dialog = true;
     },
     deleteProfile(idProfile) {
-      console.log("Profile a eliminar: ", idProfile);
+      this.$loader.activate('Eliminando perfil...');
+      Meteor.call('profile.delete',{idProfile},(error,response) => {
+        this.$loader.deactivate();
+        if(error){
+          if(error.details){
+            this.$alert.showAlertFull('warning','error',error.reason,'multi-line','5000','right','bottom',error.details);
+          }else{
+            this.$alert.showAlertSimple('error','Ocurrio un error al eliminar el perfil');
+          }
+
+        }else{
+          this.$alert.showAlertSimple('success',response.message);
+        }
+      });
+
+    }
+  },
+  meteor:{
+    $subscribe: {
+      'notStaticProfile.list':[]
+    },
+    profiles(){
+      return Profile.find().fetch();
     }
   }
 }

@@ -38,9 +38,9 @@
           <v-sheet id="scrolling-techniques-2" class="overflow-y-auto" max-height="500">
             <v-list style="height:400px;">
               <v-list-item-group>
-                <draggable :list="selfPermissions" group="permissions">
+                <draggable :list="filteredSelfPermissions" @change="(ev)=>onChangeDragList(ev,'selfPermissions')"  group="permissions">
                   <v-list-item v-for="permission in filteredSelfPermissions"
-                               v-text="permission._id" :key="permission._id">
+                               v-text="permission.publicName" :key="permission._id">
                   </v-list-item>
                 </draggable>
               </v-list-item-group>
@@ -59,9 +59,9 @@
           <v-sheet id="scrolling-techniques-3" class="overflow-y-auto" max-height="500">
             <v-list style="height:400px;">
               <v-list-item-group>
-                <draggable :list="allPermissions" group="permissions">
+                <draggable :list="filteredPermissions" @change="(ev)=>onChangeDragList(ev,'allPermissions')" group="permissions">
                   <v-list-item v-for="permission in filteredPermissions"
-                               v-text="permission._id" :key="permission._id">
+                               v-text="permission.publicName" :key="permission._id">
                   </v-list-item>
                 </draggable>
               </v-list-item-group>
@@ -95,37 +95,68 @@ export default {
       searchSelfPermission: '',
       searchPermission: '',
       selfPermissions: [],
-      allPermissions: [
-        {_id: 'users-view'},
-        {_id: 'users-create'},
-        {_id: 'users-edit'},
-        {_id: 'users-delete'},
-      ],
+      allPermissions: [],
     }
   },
   created() {
     if (this.$router.currentRoute.name.includes("create")) {
       this.dataView.title = "Crear perfil";
       this.dataView.targetButton = "Crear";
+      this.listAllPermissions();
     } else if (this.$router.currentRoute.name.includes("edit")) {
+      const tempProfile=this.$store.state.temporal.element;
+      this.profile= {
+            _id: tempProfile._id,
+            name: tempProfile.name,
+            description: tempProfile.description,
+            permissions: tempProfile.permissions
+      };
       this.dataView.title = "Editar perfil";
       this.dataView.targetButton = "Actualizar";
     }
   },
   methods: {
+    onChangeDragList(event , propData) {
+      if(event.hasOwnProperty('removed')){
+        this[propData] = this[propData].filter(permission => permission._id != event.removed.element._id);
+
+      }else if(event.hasOwnProperty('added')){
+        this[propData].splice(event.added.newIndex,0, event.added.element);
+      }
+    },
     saveProfile() {
-      console.log("Perfil: ", this.profile);
+      console.log("Guardando Perfil: ", this.profile);
+      this.$loader.activate('Guardando perfil ...');
+      this.profile.permissions = this.selfPermissions.map(permission => permission._id);
+      Meteor.call('profile.save',this.profile,(error,response)=>{
+        this.$loader.deactivate();
+        if(error){
+          this.$alert.showAlertSimple('error','Ocurrió un error al guardar el perfil');
+        }else{
+          this.$alert.showAlertSimple('success',response.message);
+          this.$router.push({name: 'home.profiles'});
+        }
+      });
+    },
+    listAllPermissions(){
+      Meteor.call('permissions.list',(error,response)=>{
+          if (error){
+            this.$alert.showAlertSimple('error',error.reason,response);
+          } else {
+            this.allPermissions = response.data;
+          }
+      });
     }
   },
   computed:{
     filteredSelfPermissions(){
       return this.selfPermissions.filter(permission=>{
-        return permission._id.toLowerCase().includes(this.searchSelfPermission.toLowerCase());
+        return permission.publicName.toLowerCase().includes(this.searchSelfPermission.toLowerCase());
       })
     },
     filteredPermissions(){
       return this.allPermissions.filter(permission=>{
-        return permission._id.toLowerCase().includes(this.searchPermission.toLowerCase());
+        return permission.publicName.toLowerCase().includes(this.searchPermission.toLowerCase());
       })
     },
   }
