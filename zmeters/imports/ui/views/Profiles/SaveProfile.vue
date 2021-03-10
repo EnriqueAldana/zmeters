@@ -111,6 +111,7 @@ export default {
             description: tempProfile.description,
             permissions: tempProfile.permissions
       };
+      this.initPermissions(this.profile._id);
       this.dataView.title = "Editar perfil";
       this.dataView.targetButton = "Actualizar";
     }
@@ -145,6 +146,22 @@ export default {
           } else {
             this.allPermissions = response.data;
           }
+      });
+    },
+    initPermissions(idProfile){
+      Meteor.call('permissions.listByIdProfile',{"idProfile":idProfile},(error,response)=>{
+        if (error){
+          this.$alert.showAlertSimple('error',error.reason,response);
+        } else {
+          this.selfPermissions = response.data;
+        }
+      });
+      Meteor.call('permissions.listOfOthers',{"idProfile":idProfile},(error,response)=>{
+        if (error){
+          this.$alert.showAlertSimple('error',error.reason,response);
+        } else {
+          this.allPermissions = response.data;
+        }
       });
     }
   },

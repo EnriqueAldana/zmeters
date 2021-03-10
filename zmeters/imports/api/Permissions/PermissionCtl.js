@@ -43,14 +43,11 @@ new ValidatedMethod({
     run(idProfile) {
         const responseMessage = new ResponseMessage();
         try{
-            console.log('idProfile', idProfile.idProfile);
             let permissions= [];
             const profile= Profile.findOne({'_id':idProfile.idProfile});
-            console.log('profile',profile);
             if(profile){
                 permissions=Meteor.roles.find({'_id':{$in:profile.permissions}}).fetch();
             }
-
             responseMessage.create('Permisos asociados al perfil','Permisos incluidos en el perfil',permissions);
         }catch(ex){
             console.log('permissions.listByIdProfile: ', ex);
@@ -78,14 +75,11 @@ new ValidatedMethod({
     run(idProfile) {
         const responseMessage = new ResponseMessage();
         try{
-            console.log('idProfile', idProfile.idProfile);
             let permissions= [];
             const profile= Profile.findOne({'_id':idProfile.idProfile});
-            console.log('profile',profile);
             if(profile){
                 permissions=Meteor.roles.find({'_id':{$nin:profile.permissions}}).fetch();
             }
-            console.log('permissions ' ,permissions );
             responseMessage.create('Permisos NO asociados al perfil','Permisos NO incluidos en el perfil',permissions);
         }catch(ex){
             console.log('permissions.listOfOthers: ', ex);
