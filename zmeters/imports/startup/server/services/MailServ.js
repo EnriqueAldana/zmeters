@@ -12,6 +12,7 @@ const email = `<${process.env.EMAIL_SERVICES}>`;
 const from = `${ name } ${ email}`;
 
 const emailEnrollAccount = 'email_enroll_account.html';
+const emailResetPassword = 'email_reset_password.html';
 const productSrc = 'http://localhost:3000/img/vue-meteor.png';
 const logoSrc = 'http://localhost:3000/img/Powered.png';
 
@@ -26,10 +27,29 @@ emailTemplates.emailEnrollAccount = {
     html(user,url) {
         const urlWithoutHash = url.replace('#/','');
         if(Meteor.isDevelopment) {
-            console.info('Inicializacion del link para password',urlWithoutHash);
+            console.info('Link para fijar contraseña',urlWithoutHash);
         }
         SSR.compileTemplate('emailEnrollAccount',Assets.getText(emailEnrollAccount));
         return SSR.render('emailEnrollAccount',{
+            urlWithoutHash,
+            productSrc,
+            logoSrc
+        });
+    }
+};
+
+
+emailTemplates.resetPassword = {
+    subject() {
+        return `Reestablecer contraseña`;
+    },
+    html(user,url) {
+        const urlWithoutHash = url.replace('#/','');
+        if(Meteor.isDevelopment) {
+            console.info('Link para reestablecer contraseña',urlWithoutHash);
+        }
+        SSR.compileTemplate('emailResetPassword',Assets.getText(emailResetPassword));
+        return SSR.render('emailResetPassword',{
             urlWithoutHash,
             productSrc,
             logoSrc

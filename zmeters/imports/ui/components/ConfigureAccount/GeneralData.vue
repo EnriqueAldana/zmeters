@@ -66,7 +66,7 @@ export default {
           this.setUser(Meteor.user());
           // invocar el escuchador de cambio de datos en user.updatePersonalData
           this.$root.$emit('setUserLogged');
-            this.$alert.showAlertSimple('success',response.data);
+          this.$alert.showAlertSimple('success',response.message);
         }
 
     });
