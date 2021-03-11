@@ -37,6 +37,7 @@ export default {
         });
         if(idUser){
             ProfilesServ.setUsersRoles(idUser,user.profile.profile);
+            Accounts.sendEnrollmentEmail(idUser,user.emails[0].address);
         }
     },updateuser(user){
         const currentUser=Meteor.users.findOne(user._id);

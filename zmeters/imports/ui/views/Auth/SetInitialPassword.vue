@@ -40,8 +40,19 @@
         },
         methods: {
             setPassword() {
-                console.log("Token: ", this.$route.params.token);
-                console.log("Contraseñas: ", this.user);
+               // console.log("Token: ", this.$route.params.token);
+               // console.log("Contraseñas: ", this.user);
+              const token = this.$route.params.token;
+              Accounts.resetPassword(token,this.user.password, (error,success) => {
+                  if(error){
+                    this.$alert.showAlertSimple('error','Se produjo un error al establecer la contraseña');
+                  }else {
+                    this.$alert.showAlertSimple('success','Se estableció la contraseña con exito');
+                    this.$route.push({name:'login'});
+
+                  }
+              });
+
             }
         }
     }

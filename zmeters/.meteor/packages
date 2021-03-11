@@ -27,3 +27,4 @@ accounts-password
 peerlibrary:middleware
 alanning:roles
 lacosta:method-hooks
+meteorhacks:ssr

@@ -29,6 +29,10 @@ export default {
     this.setSession();
   },
   mounted(){
+    // Escuchador para cuando se guarden datos del usuario- GeneralData
+    this.$root.$on('setUserLogged',() => {
+      this.setSession();
+    });
     this.onLogoutHook=Accounts.onLogout(()=>{
       this.closeFrontSession();
     });

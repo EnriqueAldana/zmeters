@@ -28,12 +28,11 @@
                       label="Confirmar contraseña"
                       @click:append="showPass.confirm= !showPass.confirm">
         </v-text-field>
+        <div class="d-flex justify-center">
+        <v-btn type="submit" color="primary" rounded depressed>Cambiar</v-btn>
+        </div>
       </v-card-text>
-      <v-card-actions>
-        <v-row justify="center">
-          <v-btn type="submit" color="primary" rounded depressed>Cambiar</v-btn>
-        </v-row>
-      </v-card-actions>
+
 
     </v-card>
   </v-form>
@@ -58,7 +57,18 @@ export default {
   },
   methods: {
     updatePassword() {
-
+      Accounts.changePassword(this.password.old, this.password.new,(error) => {
+        if(error){
+          this.$alert.showAlertSimple('error','Ocurrio un error al cambiar la contraseña');
+        }else{
+          this.password ={
+            old:null,
+            new: null,
+            confirm: null
+          };
+          this.$alert.showAlertSimple('success','Se ha actualizado la conraseña con exito.');
+        }
+      });
     }
   }
 }

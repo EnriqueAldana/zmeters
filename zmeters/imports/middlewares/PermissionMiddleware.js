@@ -16,7 +16,7 @@ export class PermissionMiddleware extends PublishMiddleware {
 
         changed(publish,collection,id,fields){
             if (this.checkPermission(publish.userId)){
-              return super.change(...arguments);
+              return super.changed(...arguments);
             }
             return publish.ready();
 
