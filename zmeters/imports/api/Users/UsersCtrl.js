@@ -1,6 +1,6 @@
 import {ValidatedMethod} from 'meteor/mdg:validated-method';
 import {check} from 'meteor/check';
-import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
+import {ResponseMessage} from "../../startup/server/utilities/ResponseMesssage";
 import UsersServ from "./UsersServ";
 import AuthGuard from "../../middlewares/AuthGuard";
 import Permissions from "../../startup/server/Permissions";
@@ -10,9 +10,13 @@ import {Meteor} from 'meteor/meteor'
 
 
 Accounts.validateLoginAttempt( loginAttempt=>{
-   // console.log('loginAttempt ' , loginAttempt);
-    // console.log('allowed' , loginAttempt.allowed);
+   //console.log('loginAttempt ' , loginAttempt);
+   // console.log('allowed' , loginAttempt.allowed);
+   // console.log('correo verificado' , loginAttempt.user.emails[0].verified);
     if(loginAttempt.allowed){
+        if(!loginAttempt.user.emails[0].verified){
+            throw new Meteor.Error('403', 'El correo del usuario no ha sido verificado aún');
+        }
         const loginTokensOfuser=loginAttempt.user.services.resume?.loginTokens || [];
         //console.log('loginTokensOfuser ', loginTokensOfuser)
         if(loginTokensOfuser.length > 1){
@@ -34,7 +38,7 @@ new ValidatedMethod({
     permissions: [Permissions.USERS.CREATE.VALUE,Permissions.USERS.UPDATE.VALUE],
     beforeHooks: [AuthGuard.checkPermission],  // Aqui se verifica si los permisos de usuario son adecuados para esta accion
     afterHooks: [],
-    validate(user) {
+    validate({user}) {
         try {
             // Valida que la estructura del objeto user este conforme a la definicion.
             check(user, {
@@ -58,7 +62,7 @@ new ValidatedMethod({
         UsersServ.validateUserName(user.username,user._id);
 
     },
-    run(user) {
+    async run({user,photoFileUser}) {
         console.log('user.save');
         console.log('Usuario logeado ', this.userId);
         const responseMessage= new ResponseMessage();
@@ -75,7 +79,7 @@ new ValidatedMethod({
         }else{
             console.log('Agregando usuario a la BD');
             try{
-                UsersServ.createUser(user);
+                await UsersServ.createUser(user,photoFileUser);
                 console.log('Se ha guardado el usuario');
                 responseMessage.create('Se ha guardado el usuario');
             }catch (exception) {

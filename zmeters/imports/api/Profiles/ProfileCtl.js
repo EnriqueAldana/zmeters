@@ -1,6 +1,6 @@
 import {check, Match} from "meteor/check";
 import {Profile} from "./Profile";
-import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
+import {ResponseMessage} from "../../startup/server/utilities/ResponseMesssage";
 import ProfileServ from "./ProfilesServ";
 import Permissions from "../../startup/server/Permissions";
 import AuthGuard from "../../middlewares/AuthGuard";

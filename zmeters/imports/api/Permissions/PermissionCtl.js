@@ -1,7 +1,7 @@
 
 import AuthGuard from "../../middlewares/AuthGuard";
 import Permissions from "../../startup/server/Permissions"
-import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage";
+import {ResponseMessage} from "../../startup/server/utilities/ResponseMesssage";
 import {check, Match} from "meteor/check";
 import {Meteor} from "meteor/meteor";
 import {Profile} from "../Profiles/Profile";

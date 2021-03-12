@@ -13,6 +13,7 @@ const from = `${ name } ${ email}`;
 
 const emailEnrollAccount = 'email_enroll_account.html';
 const emailResetPassword = 'email_reset_password.html';
+const emailVerifyEmail = 'email_verify_email.html';
 const productSrc = 'http://localhost:3000/img/vue-meteor.png';
 const logoSrc = 'http://localhost:3000/img/Powered.png';
 
@@ -20,7 +21,7 @@ Accounts.emailTemplates.siteName = name;
 Accounts.emailTemplates.from = from;
 const emailTemplates = Accounts.emailTemplates;
 
-emailTemplates.emailEnrollAccount = {
+emailTemplates.enrollAccount = {
     subject() {
         return `Bienvenido a ${name}`;
     },
@@ -50,6 +51,24 @@ emailTemplates.resetPassword = {
         }
         SSR.compileTemplate('emailResetPassword',Assets.getText(emailResetPassword));
         return SSR.render('emailResetPassword',{
+            urlWithoutHash,
+            productSrc,
+            logoSrc
+        });
+    }
+};
+
+emailTemplates.verifyEmail = {
+    subject() {
+        return `Validar correo electronico`;
+    },
+    html(user,url) {
+        const urlWithoutHash = url.replace('#/','');
+        if(Meteor.isDevelopment) {
+            console.info('Liga para validar correo electronico',urlWithoutHash);
+        }
+        SSR.compileTemplate('emailVerifyEmail',Assets.getText(emailVerifyEmail));
+        return SSR.render('emailVerifyEmail',{
             urlWithoutHash,
             productSrc,
             logoSrc

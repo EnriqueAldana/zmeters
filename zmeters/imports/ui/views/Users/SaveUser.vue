@@ -16,7 +16,15 @@
             <v-form @submit.prevent="saveUser" id="saveUser" autocomplete="off">
               <v-row>
                 <v-col xs="12" sm="12" md="4">
-                  <img src="/img/vuetify.png" alt="Subir imagen" width="150px">
+                  <div class="d-flex flex-column align-center">
+                    <img :src="user.profile.path || '/img/user.png'" :alt="user.profile.name" width="100px">
+                    <v-file-input v-show="false" ref="imageFile" v-model="file" accept="image/png, image/jpeg , image/bpm">
+                    </v-file-input>
+                    <v-btn color="primary" class="mb-5 mt-5" width="100%" rounded depressed @click="onClickUploadButtom">
+                      <span v-if="user.profile.path">Cambiar</span>
+                      <span v-else>Cargar</span>
+                    </v-btn>
+                  </div>
                 </v-col>
                 <v-col xs="12" sm="12" md="8">
                   <v-text-field v-model="user.profile.name" id="inputName" name="name" label="Nombre">
@@ -59,6 +67,8 @@ export default {
           path: null
         },
       },
+      file: null,
+      photoFileUser : null,
       dataView: {
         title: '',
         targetButton: ''
@@ -81,11 +91,27 @@ export default {
       };
     }
   },
+  watch: {
+    // El nombre de la funcion debera ser el de la variable por observar
+    file(newFile){
+      if(newFile && typeof (FileReader) != 'undefined'){
+        const reader= new FileReader();
+        reader.onload= function(ev){
+          this.user.profile.path=ev.target.result;
+          this.photoFileUser= ev.target.result;
+        }.bind(this);
+        reader.readAsDataURL(newFile);
+      }
+    }
+  },
   methods: {
+    onClickUploadButtom(){
+      this.$refs.imageFile.$refs.input.click();
+    },
     saveUser() {
       console.log("Usuario: ", this.user);
       this.$loader.activate('Guardando usuario...');
-      Meteor.call('user.save',this.user,(error,response) => {
+      Meteor.call('user.save',{user: this.user,photoFileUser: this.photoFileUser},(error,response) => {
         this.$loader.deactivate();
         if(error){
               this.$alert.showAlertSimple('error',error.reason);

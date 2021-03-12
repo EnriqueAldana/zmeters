@@ -37,7 +37,12 @@ import {mapMutations} from 'vuex';
             login() {
                 Meteor.loginWithPassword(this.user.userOrEmail,this.user.password,error=>{
                   if(error) {
-                    this.$alert.showAlertSimple('error','Credenciales incorrectas');
+                    if(error.error==='403') {
+                      this.$alert.showAlertFull('mid-close-circle','warning',error.reason,'',5000,'centred','bottom');
+                    }else{
+                      this.$alert.showAlertSimple('error','Credenciales incorrectas');
+                    }
+
                   }else{
                     Meteor.logoutOtherClients(err=>{
                       if(err) {

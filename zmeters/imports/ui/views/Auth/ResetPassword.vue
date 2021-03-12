@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="title">Resetear contraseña</div>
+        <div class="title">Restablecer contraseña</div>
         <v-form @submit.prevent="resetPassword">
             <v-text-field v-model="user.password" id="inputPassword"
                           :append-icon="showPass.new?'mdi-eye':'mdi-eye-off'"
@@ -17,7 +17,7 @@
                           autocomplete="new-password">
             </v-text-field>
             <div class="d-flex start">
-                <v-btn type="submit" color="primary" rounded>Resetear</v-btn>
+                <v-btn type="submit" color="primary" rounded>Restablecer</v-btn>
             </div>
         </v-form>
     </div>

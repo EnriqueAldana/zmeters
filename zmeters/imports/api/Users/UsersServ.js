@@ -1,5 +1,7 @@
 import ProfilesServ from "../Profiles/ProfilesServ";
+import FileOperations from "../../startup/server/utilities/FileOperations";
 
+const PATH_USERS_FILENAME = 'users/';
 export default {
 
     validateEmail(newEmail,idUser){
@@ -27,7 +29,8 @@ export default {
         }else if(existsUserName){ // El nombre de NUEVO usuario ya existe
             throw new Meteor.Error('403', 'El nombre de usuario  ya esta siendo utilizado');
         }
-    },createUser(user){
+    },
+    async createUser(user,photoFileUser){
         const idUser= Accounts.createUser({
             username: user.username,
             email: user.emails[0].address,
@@ -39,13 +42,32 @@ export default {
             ProfilesServ.setUsersRoles(idUser,user.profile.profile);
             Accounts.sendEnrollmentEmail(idUser,user.emails[0].address);
         }
+        let avatarSrc= null;
+
+        if(photoFileUser){
+            const response= await FileOperations.saveFileFromBase64ToGoogleStorage(photoFileUser,'avatar',
+                PATH_USERS_FILENAME+idUser);
+            if(!response.data.success){
+                throw new Meteor.Error('500','Error al subir la foto');
+            }else{
+                avatarSrc= response.data.fileUrl;
+            }
+        }
+        Meteor.users.update(idUser,{
+            $set: {
+                'profile.path': avatarSrc
+            }
+        });
+
+
     },updateuser(user){
         const currentUser=Meteor.users.findOne(user._id);
 
         if(currentUser!==undefined){
             if(currentUser.emails[0].address!==user.emails[0].address ){
-                Accounts.removeEmail(currentUser._id, currentUser.emails[0].address());
-                Accounts.addEmail(currentUser._id,user.emails[0].address());
+                Accounts.removeEmail(currentUser._id, currentUser.emails[0].address);
+                Accounts.addEmail(currentUser._id,user.emails[0].address);
+                Accounts.sendVerificationEmail(user._id,user.emails[0].address);
             }
             if(currentUser.username!==user.username ){
                 Accounts.setUsername(currentUser._id,user.username);

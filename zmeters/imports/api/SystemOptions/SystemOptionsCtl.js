@@ -1,6 +1,6 @@
 import SystemOptions from "./SystemOptions";
 import AuthGuard from "../../middlewares/AuthGuard";
-import {ResponseMessage} from "../../startup/server/Utilities/ResponseMesssage"
+import {ResponseMessage} from "../../startup/server/utilities/ResponseMesssage"
 
 new ValidatedMethod({
    name:'user.getSystemOptions',
