@@ -6,7 +6,8 @@ import {ResponseMessage} from "./ResponseMesssage";
 export default {
     async saveFileFromBufferToGoogleStorage(fileBuffer, name, path ,mimeType) {
         const responseMessage = new ResponseMessage();
-        const filename = `${ name }${ Utilities.generateNumberToken(10.99) }.${ mimetypes.detectExtension(mimeType) }`;
+        const versionFile= Utilities.generateNumberToken(10,99);
+        const filename = `${ name }${ versionFile }.${ mimetypes.detectExtension(mimeType) }`;
         const file = firebaseAdminsStorage.file(`${ path}/${ filename}`);
         const fileUrl = `${ BASE_URL_STORAGE }/${ firebaseAdminsStorage.name }/${ path }/${ filename }`;
         try{
