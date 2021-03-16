@@ -30,5 +30,24 @@ export default {
         const base64EncodedImageString= base64file.split(';base64,').pop();
         const fileBuffer= Buffer.from(base64EncodedImageString,'base64');
         return await this.saveFileFromBufferToGoogleStorage(fileBuffer,name,path,mimeType);
+    },
+    async deleteFileFromGoogleStoreIfExists(fileLocation){
+        const file = firebaseAdminsStorage.file(fileLocation);
+        try{
+            const existsFile = await file.exists();
+            if(existsFile[0]){
+                    await file.delete();
+            }
+        }catch(exception){
+            console.error('Ha habido un error al borrar archivo de Google Store', exception);
+        }
+
+    },
+    async deleteFilesOfFolderFromGoogleStorage(userFolder) {
+        try {
+            await firebaseAdminsStorage.deleteFiles({prefix: userFolder + '/'});
+        } catch (exception) {
+            console.error('Error deleting files from Google Storage');
+        }
     }
 }

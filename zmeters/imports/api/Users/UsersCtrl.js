@@ -69,7 +69,7 @@ new ValidatedMethod({
         if(user._id !==null){
             console.log('Actualizando usuario a la BD');
             try {
-                UsersServ.updateuser(user);
+                await UsersServ.updateuser(user,photoFileUser);
             }catch(exception){
                 console.error('user.save',exception);
                 throw new Meteor.Error('500','Ocurrió un error al actualizar los datos del usuario');
@@ -108,15 +108,14 @@ new ValidatedMethod({
         }
 
     },
-    run({idUser}){
+    async run({idUser}){
         console.log('user.remove');
         console.log('idUser', idUser);
         const responseMessage = new ResponseMessage;
 
         try{
                 console.log('Eliminando usuario a la BD');
-                Meteor.users.remove(idUser);
-                //Meteor.roleAssignment.remove({'user._id':idUser._id});
+               await UsersServ.deleteUser(idUser);
 
         }catch(exception){
             console.error('user.remove','Ocurrió un error al eliminar al usaurio');
@@ -133,7 +132,7 @@ new ValidatedMethod({
     mixins: [MethodHooks],
     beforeHooks: [AuthGuard.isUserLogged],  // Aqui se verifica si los permisos de usuario son adecuados para esta accion
     afterHooks: [],
-    validate(user) {
+    validate({user}) {
         try {
             // Valida que la estructura del objeto user este conforme a la definicion.
             check(user, {
@@ -155,13 +154,13 @@ new ValidatedMethod({
         UsersServ.validateUserName(user.username,user._id);
 
     },
-    run(user) {
+    async run({user,photoFileUser}) {
         console.log('user.updatePersonalData');
         //console.log('Usuario logeado ', this.userId);
         const responseMessage= new ResponseMessage();
         if(user._id !==null){
             try {
-                UsersServ.updateuser(user);
+                await UsersServ.updateuser(user,photoFileUser);
             }catch(exception){
                 console.error('user.updatePersonalData',exception);
                 throw new Meteor.Error('500','Ocurrió un error al actualizar los datos del usuario');

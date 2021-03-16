@@ -12,7 +12,16 @@
             <span>Agregar usuario</span>
           </v-tooltip>
         </div>
-        <v-data-table :headers="headers" :items="users" @dblclick:row="(event,{item})=>openEditUser(item)" sort-by="name" class="elevation-1">
+        <v-data-table :headers="headers" :items="users" @dblclick:row="(event,{item})=>openEditUser(item)"
+                      sort-by="name" class="elevation-1">
+          <template v-slot:item.profile.path="{item}">
+            <div class="d-flex align-center pt-5 pb-5">
+              <v-avatar>
+                <img :src="item.profile.path || '/img/user.png'" alt="Avatar">
+              </v-avatar>
+            </div>
+
+          </template>
           <template v-slot:item.action="{item}">
             <v-tooltip bottom>
               <template v-slot:activator="{on}">
@@ -83,6 +92,7 @@ export default {
   computed: {
     headers() {
       return [
+        {value: 'profile.path', text: 'Imagen', sortable: false},
         {
           value: 'profile.name', text: 'Nombre', sortable: true, filter: value => {
             return value != null && typeof value === 'string' &&

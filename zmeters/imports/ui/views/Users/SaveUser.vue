@@ -52,9 +52,11 @@
 
 <script>
 import {Profile} from "../../../api/Profiles/Profile";
+import uploadImage from "../../mixins/users/uploadImage";
 
 export default {
   name: "SaveUser",
+  mixins:[uploadImage],
   data() {
     return {
       user: {
@@ -67,8 +69,6 @@ export default {
           path: null
         },
       },
-      file: null,
-      photoFileUser : null,
       dataView: {
         title: '',
         targetButton: ''
@@ -91,23 +91,7 @@ export default {
       };
     }
   },
-  watch: {
-    // El nombre de la funcion debera ser el de la variable por observar
-    file(newFile){
-      if(newFile && typeof (FileReader) != 'undefined'){
-        const reader= new FileReader();
-        reader.onload= function(ev){
-          this.user.profile.path=ev.target.result;
-          this.photoFileUser= ev.target.result;
-        }.bind(this);
-        reader.readAsDataURL(newFile);
-      }
-    }
-  },
   methods: {
-    onClickUploadButtom(){
-      this.$refs.imageFile.$refs.input.click();
-    },
     saveUser() {
       console.log("Usuario: ", this.user);
       this.$loader.activate('Guardando usuario...');

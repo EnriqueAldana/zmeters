@@ -1,5 +1,6 @@
 import ProfilesServ from "../Profiles/ProfilesServ";
 import FileOperations from "../../startup/server/utilities/FileOperations";
+import {Meteor} from "meteor/meteor";
 
 const PATH_USERS_FILENAME = 'users/';
 export default {
@@ -48,7 +49,7 @@ export default {
             const response= await FileOperations.saveFileFromBase64ToGoogleStorage(photoFileUser,'avatar',
                 PATH_USERS_FILENAME+idUser);
             if(!response.data.success){
-                throw new Meteor.Error('500','Error al subir la foto');
+                throw new Meteor.Error('403','Error al subir la foto');
             }else{
                 avatarSrc= response.data.fileUrl;
             }
@@ -60,7 +61,8 @@ export default {
         });
 
 
-    },updateuser(user){
+    },
+    async updateuser(user,photoFileUser){
         const currentUser=Meteor.users.findOne(user._id);
 
         if(currentUser!==undefined){
@@ -72,7 +74,6 @@ export default {
             if(currentUser.username!==user.username ){
                 Accounts.setUsername(currentUser._id,user.username);
             }
-
             Meteor.users.update(user._id,{
                 $set:{
                     profile:{
@@ -83,9 +84,32 @@ export default {
                 }
             });
             ProfilesServ.setUsersRoles(user._id,user.profile.profile);
+            if(photoFileUser){
+                if(currentUser.profile.path){
+                    await FileOperations.deleteFileFromGoogleStoreIfExists(currentUser.profile.path
+                        .substring(currentUser.profile.path.lastIndexOf(PATH_USERS_FILENAME)));
+                }
+                const response= await FileOperations.saveFileFromBase64ToGoogleStorage(photoFileUser,'avatar',
+                    PATH_USERS_FILENAME+user._id);
+                if(!response.data.success){
+                    throw new Meteor.Error('403','Error al subir la foto');
+                }else{
+                    Meteor.users.update(user._id,{
+                        $set: {
+                            'profile.path': response.data.fileUrl
+                        }
+                    });
+
+                }
+            }
         }else{
             throw new Meteor.Error('403', 'El usuario por actualizar no está en la BD');
         }
 
+    },
+   async  deleteUser(idUser){
+        Meteor.users.remove(idUser);
+        Meteor.roleAssignment.remove({'user._id':idUser});
+        await FileOperations.deleteFilesOfFolderFromGoogleStorage(PATH_USERS_FILENAME+idUser);
     }
 }
