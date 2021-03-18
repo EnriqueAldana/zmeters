@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/simple-todos/.meteor/local" />
       <excludeFolder url="file://$MODULE_DIR$/zmeters/.meteor/local" />
+      <excludeFolder url="file://$MODULE_DIR$/zmeters/settings" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
