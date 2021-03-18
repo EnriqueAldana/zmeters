@@ -14,9 +14,10 @@ const from = `${ name } ${ email}`;
 const emailEnrollAccount = 'email_enroll_account.html';
 const emailResetPassword = 'email_reset_password.html';
 const emailVerifyEmail = 'email_verify_email.html';
-const productSrc = 'http://localhost:3000/img/vue-meteor.png';
-const logoSrc = 'http://localhost:3000/img/Powered.png';
-
+//const productSrc = 'http://localhost:3000/img/vue-meteor.png';
+//const logoSrc = 'http://localhost:3000/img/Logo.png';
+const productSrc = 'https://firebasestorage.googleapis.com/v0/b/zmeters.appspot.com/o/ZeroMts_Product.png?alt=media';
+const logoSrc ='https://firebasestorage.googleapis.com/v0/b/zmeters.appspot.com/o/Logo.png?alt=media';
 Accounts.emailTemplates.siteName = name;
 Accounts.emailTemplates.from = from;
 const emailTemplates = Accounts.emailTemplates;
