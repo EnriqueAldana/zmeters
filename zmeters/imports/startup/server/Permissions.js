@@ -29,7 +29,12 @@ const Permissions={
         UPDATE_SUPER_ADMIN:{VALUE:'superadmins-edit',TEXT:'Editar super administrador'},
         DELETE_SUPER_ADMIN:{VALUE:'superadmins-delete',TEXT:'Borrar super administrador'}
 
+    },
+    CHAT: {
+        CREATE: { VALUE: 'message-create', TEXT: 'Enviar mensaje de chat'},
+        LIST: { VALUE: 'message-view', TEXT: 'Ver mensajes de chat'}
     }
+
 };
 
 export const permissionsArray= Object.keys(Permissions).reduce((accumulator, systemModuleName)=>{

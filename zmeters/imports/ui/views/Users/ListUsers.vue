@@ -20,7 +20,13 @@
                 <img :src="item.profile.path || '/img/user.png'" alt="Avatar">
               </v-avatar>
             </div>
-
+          </template>
+          <template v-slot:item.status.online="{item}">
+            <div class="d-flex align-center pt-5 pb-5">
+              <v-icon :color="item.status.online?'green' : 'red'">
+                mdi-checkbox-blank-circle
+              </v-icon>
+            </div>
           </template>
           <template v-slot:item.action="{item}">
             <v-tooltip bottom>
@@ -42,6 +48,10 @@
           </template>
           <template v-slot:body.append="{isMobile}">
             <tr v-if="!isMobile">
+              <td>
+              </td>
+              <td>
+              </td>
               <td>
                 <v-text-field v-model="headersFilter.name" type="text"
                               label="Nombre"></v-text-field>
@@ -93,6 +103,7 @@ export default {
     headers() {
       return [
         {value: 'profile.path', text: 'Imagen', sortable: false},
+        {value: 'status.online', text: 'En linea', sortable: true},
         {
           value: 'profile.name', text: 'Nombre', sortable: true, filter: value => {
             return value != null && typeof value === 'string' &&

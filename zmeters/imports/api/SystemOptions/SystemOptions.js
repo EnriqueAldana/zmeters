@@ -14,6 +14,11 @@ export default [
                 title:'Perfiles',
                 permission:Permissions.PROFILES.LIST.VALUE,
                 routeName:'home.profiles'
+            },
+            {
+                title:'Chat',
+                permission: Permissions.CHAT.LIST.VALUE,
+                routeName:'home.chat'
             }
 
     ]

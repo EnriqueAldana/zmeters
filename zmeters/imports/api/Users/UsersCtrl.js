@@ -5,10 +5,23 @@ import UsersServ from "./UsersServ";
 import AuthGuard from "../../middlewares/AuthGuard";
 import Permissions from "../../startup/server/Permissions";
 import {Meteor} from 'meteor/meteor'
+import './UserPresenceConfig'
+
+// se inserta usuario mediante un listener para agregar el Schema
+Accounts.onCreateUser( (options,user) => {
+    const customizedUser = Object.assign({
+        status: {
+            online: false
+        }
+    }, user);
+    if(options.profile){
+        customizedUser.profile = options.profile;
+    }
+    return customizedUser;
+    
+});
 
 // Aqui removemos los rgistros de tokens del objeto user en la BD
-
-
 Accounts.validateLoginAttempt( loginAttempt=>{
    //console.log('loginAttempt ' , loginAttempt);
    // console.log('allowed' , loginAttempt.allowed);
@@ -41,6 +54,7 @@ new ValidatedMethod({
     validate({user}) {
         try {
             // Valida que la estructura del objeto user este conforme a la definicion.
+            console.log("Usuario ",user);
             check(user, {
                 _id: Match.OneOf(String, null),
                 username: String,
@@ -63,6 +77,7 @@ new ValidatedMethod({
 
     },
     async run({user,photoFileUser}) {
+     //   async run(user) {
         console.log('user.save');
         console.log('Usuario logeado ', this.userId);
         const responseMessage= new ResponseMessage();
@@ -80,6 +95,7 @@ new ValidatedMethod({
             console.log('Agregando usuario a la BD');
             try{
                 await UsersServ.createUser(user,photoFileUser);
+               //await UsersServ.createUser(user,null);
                 console.log('Se ha guardado el usuario');
                 responseMessage.create('Se ha guardado el usuario');
             }catch (exception) {

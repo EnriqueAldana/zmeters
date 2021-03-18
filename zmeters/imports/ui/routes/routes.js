@@ -4,6 +4,7 @@ import Home from "../views/Home/Home";
 import ConfigureAccount from "../views/Account/ConfigureAccount";
 import usersRoutes from "./usersRoutes";
 import profilesRoutes from "./profilesRoutes";
+import chatRoutes from "./chatRoutes";
 
 export default [
     {
@@ -36,7 +37,8 @@ export default [
                 }
             },
             usersRoutes,
-            profilesRoutes
+            profilesRoutes,
+            chatRoutes
         ]
     }
 ]

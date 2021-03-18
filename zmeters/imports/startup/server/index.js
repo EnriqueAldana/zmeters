@@ -11,7 +11,10 @@ import '../../api/Permissions/PermissionCtl';
 import '../../api/Permissions/PermissionPubs';
 import '../../api/SystemOptions/SystemOptionsCtl';
 import '../server/services/FirebaseAdmin';
-
+import '../../api/Messages/Message';
+import '../../api/Messages/MessagesCtl';
+import '../../api/Messages/MessagePubs';
+import '../../api/Messages/MessageSeeder';
 
 // Ejemplos de creacion de metodos o End Points
 import {ValidatedMethod} from 'meteor/mdg:validated-method';
